@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 
 const Employee = mongoose.Schema({
-    name: String,
-    rollNumber: String,
+    username: String,
+    email: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    mobileNo: String
 }, {
         timestamps: true
     });

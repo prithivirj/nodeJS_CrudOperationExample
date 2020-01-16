@@ -3,18 +3,13 @@ const Employee = require('../models/employee.model.js');
 // Create and Save a new Employee
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.rollNumber || !req.body.name) {
+    if (!req.body.username || !req.body.password || !req.body.mobileNo || !req.body.firstName) {
         return res.status(400).send({
             message: "Enter all the required fields"
         });
     }
-
     // Create a Employee
-    const employee = new Employee({
-        name: req.body.name,
-        rollNumber: req.body.rollNumber
-    });
-
+    const employee = new Employee(req.body);
     // Save Employee in the database
     employee.save()
         .then(data => {
@@ -60,20 +55,40 @@ exports.findOne = (req, res) => {
         });
 };
 
+// Find a single employee with a EmployeeId
+exports.login = (req, res) => {
+    Employee.find({ 'username' : req.body.username , 'password' : req.body.password })
+        .then(employee => {
+            if (!employee) {
+                return res.status(404).send({
+                    message: "Invalid Username / Password"
+                });
+            }
+            return employee;
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "User not found with id " + req.params.employeeId
+                });
+            }
+            return res.status(500).send({
+                message: "Error retrieving user with id " + req.params.employeeId
+            });
+        });
+};
+
+
 // Update a employee identified by the employeeId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body.rollNumber) {
+    if (!req.body.username || !req.body.password || !req.body.mobileNo || !req.body.firstName) {
         return res.status(400).send({
-            message: "Employee rollNumber can not be empty"
+            message: "Required fields cannot be empty"
         });
     }
 
     // Find employee and update it with the request body
-    Employee.findByIdAndUpdate(req.params.employeeId, {
-        name: req.body.name,
-        rollNumber: req.body.rollNumber
-    }, { new: true })
+    Employee.findByIdAndUpdate(req.params.employeeId, req.body, { new: true })
         .then(employee => {
             if (!employee) {
                 return res.status(404).send({
