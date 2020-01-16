@@ -55,7 +55,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Find a single employee with a EmployeeId
+// Employee login 
 exports.login = (req, res) => {
     Employee.find({ 'username' : req.body.username , 'password' : req.body.password })
         .then(employee => {

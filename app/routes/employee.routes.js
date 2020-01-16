@@ -2,10 +2,10 @@ module.exports = (app) => {
     const employee = require('../controllers/employee.controller.js');
 
     // Create a new employee
-    app.post('/employee', auth , employee.create);
+    app.post('/employee', employee.create);
 
     // Retrieve all employee
-    app.get('/employees', auth , employee.findAll);
+    app.get('/getAllEmployee', auth , employee.findAll);
 
     // Retrieve a single employee with employeeId
     app.get('/employee/:employeeId', auth , employee.findOne);
