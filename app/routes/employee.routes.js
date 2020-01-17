@@ -1,14 +1,20 @@
 module.exports = (app) => {
     const employee = require('../controllers/employee.controller.js');
+    const path = require('path'); 
+    
+    //view home
+    app.get('/home', auth , (req,res)=>{
+        res.sendFile(path.join(__dirname + '/../views/home.html'));
+    });
 
     // Create a new employee
     app.post('/employee', employee.create);
 
     // Retrieve all employee
-    app.get('/getAllEmployee', auth , employee.findAll);
+    app.get('/employee' , auth , employee.findAll);
 
     // Retrieve a single employee with employeeId
-    app.get('/employee/:employeeId', auth , employee.findOne);
+    app.get('/employee/:employeeId' , auth, employee.findOne);
 
     // Update a employee with employeeId
     app.put('/employee/:employeeId', auth , employee.update);

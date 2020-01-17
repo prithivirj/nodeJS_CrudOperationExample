@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 // create express app
 const app = express();
@@ -13,7 +14,7 @@ app.use(bodyParser.json())
 
 app.use(session({
     secret: 'secretKey',
-    resave: false,
+    resave: true,
     saveUninitialized: false
 }));
 
@@ -25,22 +26,25 @@ mongoose.Promise = global.Promise;
 
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
-	useNewUrlParser: true
+    useNewUrlParser: true
 }).then(() => {
-    console.log("connected to the db");    
+    console.log("connected to the db");
 }).catch(err => {
     console.log('db connection failure', err);
     process.exit();
 });
 
-// define a simple route
-app.get('/', (req, res) => {
-    res.json({ "message": "Node js sample CRUD operation." });
-});
-
 require('./app/routes/employee.routes.js')(app);
 
-const employee = require('./app/controllers/employee.controller.js');
+const Employee = require('./app/models/employee.model.js');
+
+app.get('/', (req, res) => {
+	res.send({ message: 'Welcome'});
+});
+
+app.get('/login', (req, res) => {
+	res.sendFile(path.join(__dirname + '/app/views/login.html'));
+});
 
 app.post('/login', (req, res) => {
 
@@ -51,24 +55,38 @@ app.post('/login', (req, res) => {
         res.send({ message: 'password is required' })
     }
     if (req.body && req.body.username && req.body.password) {
-        const emp = employee.login;
-        req.session.user = emp;
-        res.send({
-            'message' : 'Login successful', 'payload': emp
-        });
+        Employee.findOne({ 'username': req.body.username, 'password': req.body.password })
+            .then(data => {
+                if (!data) {
+                    return res.status(404).send({
+                        message: "Invalid Username / Password"
+                    });
+                } else {
+                    req.session.user = data;
+                    // return res.send({
+                    //     'message': 'Login successful', 'payload': data
+                    // });
+                    res.redirect('/home');
+                }
+            }).catch(err => {
+                return res.status(500).send({
+                    message: "Error - " + err
+                });
+            });
     }
 });
 
 app.get('/logout', (req, res) => {
-    console.log('cookie',req.cookies);
-    if (req.session.user && req.cookies.user_sid) {
+    console.log('req.session ', req.session)
+    if (req.session.user) {
         req.session.destroy();
-        res.clearCookie('user_sid');
-        res.send({'messsage': 'User logged out!'})
+        res.send({ 'messsage': 'User logged out!' })
+    } else {
+        res.send({ 'messsage': 'Logout Failed!' })
     }
 });
 
 // listen for requests
 app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+    console.log("Server is running");
 });

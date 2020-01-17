@@ -55,28 +55,6 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Employee login 
-exports.login = (req, res) => {
-    Employee.find({ 'username' : req.body.username , 'password' : req.body.password })
-        .then(employee => {
-            if (!employee) {
-                return res.status(404).send({
-                    message: "Invalid Username / Password"
-                });
-            }
-            return employee;
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.employeeId
-                });
-            }
-            return res.status(500).send({
-                message: "Error retrieving user with id " + req.params.employeeId
-            });
-        });
-};
-
 
 // Update a employee identified by the employeeId in the request
 exports.update = (req, res) => {
