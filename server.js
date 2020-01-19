@@ -30,20 +30,27 @@ mongoose.connect(dbConfig.url, {
 }).then(() => {
     console.log("connected to the db");
 }).catch(err => {
-    console.log('db connection failure', err);
+    console.log('db connection failure');
     process.exit();
 });
+
+app.set('views', path.join(__dirname, '/app/views'));
+app.set('view engine', 'ejs');
 
 require('./app/routes/employee.routes.js')(app);
 
 const Employee = require('./app/models/employee.model.js');
 
 app.get('/', (req, res) => {
-	res.send({ message: 'Welcome'});
+    //res.send({ message: 'Welcome'});
+    const title = 'Login';
+    res.render('login',{'title': title})
 });
 
 app.get('/login', (req, res) => {
-	res.sendFile(path.join(__dirname + '/app/views/login.html'));
+    //res.sendFile(path.join(__dirname + '/app/views/login.html'));
+    const title = 'Login';
+    res.render('login',{'title': title})
 });
 
 app.post('/login', (req, res) => {
@@ -54,6 +61,7 @@ app.post('/login', (req, res) => {
     if (!req.body.password) {
         res.send({ message: 'password is required' })
     }
+   
     if (req.body && req.body.username && req.body.password) {
         Employee.findOne({ 'username': req.body.username, 'password': req.body.password })
             .then(data => {
@@ -80,7 +88,8 @@ app.get('/logout', (req, res) => {
     console.log('req.session ', req.session)
     if (req.session.user) {
         req.session.destroy();
-        res.send({ 'messsage': 'User logged out!' })
+        //res.send({ 'messsage': 'User logged out!' })
+        res.redirect('/login');
     } else {
         res.send({ 'messsage': 'Logout Failed!' })
     }
