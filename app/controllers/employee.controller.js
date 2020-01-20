@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     // Save Employee in the database
     employee.save()
         .then(data => {
-            res.send(data);
+            res.redirect('/login');
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the Employee."
@@ -59,43 +59,44 @@ exports.findOne = (req, res) => {
 // Update a employee identified by the employeeId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body.username || !req.body.password || !req.body.mobileNo || !req.body.firstName) {
+    if (!req.body.id || !req.body.username || !req.body.password || !req.body.mobileNo || !req.body.firstName) {
         return res.status(400).send({
             message: "Required fields cannot be empty"
         });
     }
 
     // Find employee and update it with the request body
-    Employee.findByIdAndUpdate(req.params.employeeId, req.body, { new: true })
+    Employee.findByIdAndUpdate(req.body.id, req.body, { new: true })
         .then(employee => {
             if (!employee) {
                 return res.status(404).send({
-                    message: "Employee not found with id " + req.params.employeeId
+                    message: "Employee not found with id " + req.body.id
                 });
             }
-            res.send(employee);
+            res.redirect('/home');
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "Employee not found with id " + req.params.employeeId
+                    message: "Employee not found with id " + req.body.id
                 });
             }
             return res.status(500).send({
-                message: "Error updating employee with id " + req.params.employeeId
+                message: "Error updating employee with id " + req.body.id
             });
         });
 };
 
 // Delete a employee with the specified employeeId in the request
 exports.delete = (req, res) => {
-    Employee.findByIdAndRemove(req.params.employeeId)
+    console.log('id', req.params.employeeId)
+    Employee.findOneAndDelete({ '_id': req.params.employeeId })
         .then(employee => {
             if (!employee) {
                 return res.status(404).send({
                     message: "Employee not found with id " + req.params.employeeId
                 });
             }
-            res.send({ message: "Employee deleted successfully!" });
+            res.redirect('/home');
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                 return res.status(404).send({

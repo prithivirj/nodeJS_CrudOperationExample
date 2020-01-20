@@ -43,14 +43,12 @@ const Employee = require('./app/models/employee.model.js');
 
 app.get('/', (req, res) => {
     //res.send({ message: 'Welcome'});
-    const title = 'Login';
-    res.render('login',{'title': title})
+    res.render('login');
 });
 
 app.get('/login', (req, res) => {
     //res.sendFile(path.join(__dirname + '/app/views/login.html'));
-    const title = 'Login';
-    res.render('login',{'title': title})
+    res.render('login');
 });
 
 app.post('/login', (req, res) => {

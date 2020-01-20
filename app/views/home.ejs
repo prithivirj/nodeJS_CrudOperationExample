@@ -14,8 +14,6 @@
             </ul>
         </div>
     </nav>
-
-
     <div class="container">
         <h2>Employee list</h2>
         <table class="table">
@@ -30,47 +28,53 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <% for(var i=0; i<data.length; i++) {%>
+                <% for(var i=0; i < data.length; i++) { %>
                 <tr>
                     <td>
-                        <%= data.username%>
+                        <%= data[i].username %>
                     </td>
                     <td>
-                        <%= data.firstName%>
+                        <%= data[i].firstName %>
                     </td>
                     <td>
-                        <%= data.lastName%>
+                        <%= data[i].lastName %>
                     </td>
                     <td>
-                        <%= data.mobileNo%>
+                        <%= data[i].mobileNo %>
                     </td>
                     <td>
-                        <%= data.email%>
+                        <%= data[i].email %>
                     </td>
-                </tr>
-                <% } %> -->
 
-                <tr>
-                    <td>John</td>
-                    <td>John</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
                     <td>
-                        <span class="btn btn-link">Edit</span>|
-                        <span class="btn btn-link">Delete</span>
+                        <a class="btn btn-link edit" data-id="<%= data[i]._id %>" >Edit</a>|
+                        <a class="btn btn-link delete" data-id="<%= data[i]._id %>" >Delete</a>
                     </td>
                 </tr>
+                <% } %>
 
             </tbody>
         </table>
     </div>
 
-
-</body>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
 
 <script>
- function getAllEmployee() {
 
-}
+
+    $(".edit").click(function () {
+        var id = $(this).attr('data-id');
+        window.location.href = '/employee-update/' + id;
+    });
+
+    $(".delete").click(function () {
+        var id = $(this).attr('data-id');
+        window.location.href = '/employee-delete/' + id;
+    });
+
 </script>
+
+</body>

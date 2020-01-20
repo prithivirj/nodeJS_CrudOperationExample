@@ -1,32 +1,58 @@
 module.exports = (app) => {
     const employee = require('../controllers/employee.controller.js');
-    //view home
+    const empModel = require('../models/employee.model.js');
+
     app.get('/home', auth, (req, res) => {
-        res.render('home');
+        empModel.find()
+            .then(employeeList => {
+                res.render('home', { data: employeeList });
+            }).catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving Employee."
+                });
+            });
     });
 
-    app.get('/register', (req, res) => {
-        res.render('edit_employee', { title: 'Employee Registration', buttonName: 'Submit' });
-    })
+    // Retrieve all employee
+    app.get('/employee', auth, employee.findAll)
 
-    app.get('/employee-update', auth, (req, res) => {
-        res.render('edit_employee', { title: 'Update Employee', buttonName: 'Update' });
+    app.get('/register', (req, res) => {
+        res.render('register_employee', { title: 'Employee Registration', buttonName: 'Submit' });
     })
 
     // Create a new employee
     app.post('/employee', employee.create);
 
-    // Retrieve all employee
-    app.get('/employee', auth, employee.findAll);
+    app.get('/employee-update/:id', auth, (req, res) => {
+        empModel.findById(req.params.id)
+            .then(employee => {
+                if (!employee) {
+                    return res.status(404).send({
+                        message: "Employee not found with id " + req.params.employeeId
+                    });
+                }
+                res.render('edit_employee', { title: 'Update Employee', buttonName: 'Update', data: employee });
+            }).catch(err => {
+                if (err.kind === 'ObjectId') {
+                    return res.status(404).send({
+                        message: "Employee not found with id " + req.params.employeeId
+                    });
+                }
+                return res.status(500).send({
+                    message: "Error retrieving employee with id " + req.params.employeeId
+                });
+            });
+
+    });
+
+    // Update a employee with employeeId
+    app.post('/employee-update', auth, employee.update);
 
     // Retrieve a single employee with employeeId
     app.get('/employee/:employeeId', auth, employee.findOne);
 
-    // Update a employee with employeeId
-    app.put('/employee/:employeeId', auth, employee.update);
-
     // Delete a employee with employeeId
-    app.delete('/employee/:employeeId', auth, employee.delete);
+    app.get('/employee-delete/:employeeId', auth, employee.delete);
 }
 
 const path = require('path');

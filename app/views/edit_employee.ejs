@@ -39,48 +39,48 @@
     <h2>
       <h1><%= title %></h1>
     </h2>
-    <form class="form-horizontal emp-form" method="put" action="/employee">
-      <input type="hidden" name="id">
+    <form id="form" class="form-horizontal emp-form" method="post" action="/employee-update">
+      <input type="hidden" name="id" value= "<%= data._id %>" >
       <div class="form-group">
         <label class="control-label col-sm-2" for="username">Username:</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
+          <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" value= "<%= data.username%>" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="password">Password:</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+          <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" value= "<%= data.password %>" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="firstName">First name:</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="firstName" placeholder="Enter First name" name="firstName" required>
+          <input type="text" class="form-control" id="firstName" placeholder="Enter First name" name="firstName" value= "<%= data.firstName %>" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="lastName">Last name:</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="lastName" placeholder="Enter Last nmae" name="lastName">
+          <input type="email" class="form-control" id="lastName" placeholder="Enter Last nmae" name="lastName" value= "<%= data.lastName %>">
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="mobileNo">Mobile No:</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="mobileNo" placeholder="Enter Mobile No." name="mobileNo" required>
+          <input type="text" class="form-control" id="mobileNo" placeholder="Enter Mobile No." name="mobileNo" value= "<%= data.mobileNo %>" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="email">Email:</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+          <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value= "<%= data.email %>">
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <button type="submit" class="btn btn-default"><%= buttonName %></button>
-          <button type="button" class="btn btn-link" href="/login">Cancel</button>
+          <a type="button" id="submit" class="btn btn-link" href="/home">Cancel</a>
         </div>
       </div>
     </form>
