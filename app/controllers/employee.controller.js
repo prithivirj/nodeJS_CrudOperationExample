@@ -34,15 +34,15 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single employee with a EmployeeId
-exports.findOne = (req, res) => {
-    Employee.findById(req.params.employeeId)
+exports.findOne =  (req, res) => {
+    Employee.findById(req.params.id)
         .then(employee => {
             if (!employee) {
                 return res.status(404).send({
                     message: "Employee not found with id " + req.params.employeeId
                 });
             }
-            res.send(employee);
+            res.render('edit_employee', { title: 'Update Employee', buttonName: 'Update', data: employee });
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
@@ -53,6 +53,7 @@ exports.findOne = (req, res) => {
                 message: "Error retrieving employee with id " + req.params.employeeId
             });
         });
+
 };
 
 

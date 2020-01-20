@@ -23,27 +23,7 @@ module.exports = (app) => {
     // Create a new employee
     app.post('/employee', employee.create);
 
-    app.get('/employee-update/:id', auth, (req, res) => {
-        empModel.findById(req.params.id)
-            .then(employee => {
-                if (!employee) {
-                    return res.status(404).send({
-                        message: "Employee not found with id " + req.params.employeeId
-                    });
-                }
-                res.render('edit_employee', { title: 'Update Employee', buttonName: 'Update', data: employee });
-            }).catch(err => {
-                if (err.kind === 'ObjectId') {
-                    return res.status(404).send({
-                        message: "Employee not found with id " + req.params.employeeId
-                    });
-                }
-                return res.status(500).send({
-                    message: "Error retrieving employee with id " + req.params.employeeId
-                });
-            });
-
-    });
+    app.get('/employee-update/:id', auth, employee.findOne);
 
     // Update a employee with employeeId
     app.post('/employee-update', auth, employee.update);
