@@ -38,6 +38,7 @@ app.set('views', path.join(__dirname, '/app/views'));
 app.set('view engine', 'ejs');
 
 require('./app/routes/employee.routes.js')(app);
+require('./app/routes/twitter.routes')(app);
 
 const Employee = require('./app/models/employee.model.js');
 
